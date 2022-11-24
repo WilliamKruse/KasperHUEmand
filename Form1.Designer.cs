@@ -30,6 +30,8 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.HueKodeInput = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -42,8 +44,18 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.CurrentStatus = new System.Windows.Forms.Label();
             this.STOPKNAPPEN = new System.Windows.Forms.Button();
+            this.SlukMusik = new System.Windows.Forms.CheckBox();
+            this.TestLys = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.NewGeneratedCode2 = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.PrevSong = new System.Windows.Forms.Button();
+            this.NextSong = new System.Windows.Forms.Button();
+            this.UAK = new System.Windows.Forms.Button();
+            this.GULDDRENG = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -59,6 +71,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.HueKodeInput);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.checkBox1);
@@ -72,11 +86,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Oplysninger";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(224, 80);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(59, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Vælg Land";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.AllowDrop = true;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(227, 94);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 6;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // HueKodeInput
             // 
             this.HueKodeInput.Location = new System.Drawing.Point(6, 140);
             this.HueKodeInput.Name = "HueKodeInput";
-            this.HueKodeInput.Size = new System.Drawing.Size(194, 20);
+            this.HueKodeInput.Size = new System.Drawing.Size(342, 20);
             this.HueKodeInput.TabIndex = 5;
             this.HueKodeInput.TextChanged += new System.EventHandler(this.HueKodeInput_TextChanged);
             // 
@@ -84,7 +118,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Impact", 10.25F);
-            this.label3.Location = new System.Drawing.Point(6, 119);
+            this.label3.Location = new System.Drawing.Point(3, 119);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(180, 18);
             this.label3.TabIndex = 4;
@@ -105,7 +139,7 @@
             // 
             this.IPInput.Location = new System.Drawing.Point(6, 52);
             this.IPInput.Name = "IPInput";
-            this.IPInput.Size = new System.Drawing.Size(194, 20);
+            this.IPInput.Size = new System.Drawing.Size(342, 20);
             this.IPInput.TabIndex = 2;
             this.IPInput.TextChanged += new System.EventHandler(this.IPInput_TextChanged);
             // 
@@ -148,11 +182,11 @@
             // NewGeneratedCode
             // 
             this.NewGeneratedCode.AutoSize = true;
-            this.NewGeneratedCode.Location = new System.Drawing.Point(180, 230);
+            this.NewGeneratedCode.Location = new System.Drawing.Point(9, 228);
             this.NewGeneratedCode.Name = "NewGeneratedCode";
-            this.NewGeneratedCode.Size = new System.Drawing.Size(319, 13);
+            this.NewGeneratedCode.Size = new System.Drawing.Size(322, 13);
             this.NewGeneratedCode.TabIndex = 3;
-            this.NewGeneratedCode.Text = "Her kommer din Unikke kode hvis det er første gang du connecter";
+            this.NewGeneratedCode.Text = "Her kommer din Unikke kode hvis det er første gang du connecter:";
             // 
             // statusLabel
             // 
@@ -177,7 +211,7 @@
             // 
             this.STOPKNAPPEN.BackColor = System.Drawing.SystemColors.Desktop;
             this.STOPKNAPPEN.Enabled = false;
-            this.STOPKNAPPEN.Location = new System.Drawing.Point(558, 193);
+            this.STOPKNAPPEN.Location = new System.Drawing.Point(654, 74);
             this.STOPKNAPPEN.Name = "STOPKNAPPEN";
             this.STOPKNAPPEN.Size = new System.Drawing.Size(75, 23);
             this.STOPKNAPPEN.TabIndex = 6;
@@ -185,11 +219,110 @@
             this.STOPKNAPPEN.UseVisualStyleBackColor = false;
             this.STOPKNAPPEN.Click += new System.EventHandler(this.STOPKNAPPEN_Click);
             // 
+            // SlukMusik
+            // 
+            this.SlukMusik.AutoSize = true;
+            this.SlukMusik.Location = new System.Drawing.Point(463, 200);
+            this.SlukMusik.Name = "SlukMusik";
+            this.SlukMusik.Size = new System.Drawing.Size(77, 17);
+            this.SlukMusik.TabIndex = 7;
+            this.SlukMusik.Text = "Sluk musik";
+            this.SlukMusik.UseVisualStyleBackColor = true;
+            this.SlukMusik.CheckedChanged += new System.EventHandler(this.SlukMusik_CheckedChanged);
+            // 
+            // TestLys
+            // 
+            this.TestLys.Location = new System.Drawing.Point(66, 19);
+            this.TestLys.Name = "TestLys";
+            this.TestLys.Size = new System.Drawing.Size(75, 23);
+            this.TestLys.TabIndex = 8;
+            this.TestLys.Text = "Test Lys";
+            this.TestLys.UseVisualStyleBackColor = true;
+            this.TestLys.Click += new System.EventHandler(this.TestLys_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 45);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(226, 13);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Kræver IP og KODE! Genstarter app efter test.";
+            // 
+            // NewGeneratedCode2
+            // 
+            this.NewGeneratedCode2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.NewGeneratedCode2.Location = new System.Drawing.Point(12, 244);
+            this.NewGeneratedCode2.Multiline = true;
+            this.NewGeneratedCode2.Name = "NewGeneratedCode2";
+            this.NewGeneratedCode2.ReadOnly = true;
+            this.NewGeneratedCode2.Size = new System.Drawing.Size(363, 20);
+            this.NewGeneratedCode2.TabIndex = 10;
+            this.NewGeneratedCode2.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.TestLys);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Location = new System.Drawing.Point(12, 279);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(236, 69);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Test";
+            // 
+            // PrevSong
+            // 
+            this.PrevSong.Location = new System.Drawing.Point(463, 223);
+            this.PrevSong.Name = "PrevSong";
+            this.PrevSong.Size = new System.Drawing.Size(186, 23);
+            this.PrevSong.TabIndex = 12;
+            this.PrevSong.Text = "BURHAN G ft. LANDSHOLDET";
+            this.PrevSong.UseVisualStyleBackColor = true;
+            this.PrevSong.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // NextSong
+            // 
+            this.NextSong.Location = new System.Drawing.Point(463, 252);
+            this.NextSong.Name = "NextSong";
+            this.NextSong.Size = new System.Drawing.Size(186, 23);
+            this.NextSong.TabIndex = 13;
+            this.NextSong.Text = "NATHOLDET ft. CHRISTOPHER";
+            this.NextSong.UseVisualStyleBackColor = true;
+            this.NextSong.Click += new System.EventHandler(this.NextSong_Click);
+            // 
+            // UAK
+            // 
+            this.UAK.Location = new System.Drawing.Point(463, 281);
+            this.UAK.Name = "UAK";
+            this.UAK.Size = new System.Drawing.Size(186, 23);
+            this.UAK.TabIndex = 14;
+            this.UAK.Text = "UAK";
+            this.UAK.UseVisualStyleBackColor = true;
+            this.UAK.Click += new System.EventHandler(this.UAK_Click);
+            // 
+            // GULDDRENG
+            // 
+            this.GULDDRENG.Location = new System.Drawing.Point(463, 310);
+            this.GULDDRENG.Name = "GULDDRENG";
+            this.GULDDRENG.Size = new System.Drawing.Size(186, 23);
+            this.GULDDRENG.TabIndex = 15;
+            this.GULDDRENG.Text = "GULDDRENG";
+            this.GULDDRENG.UseVisualStyleBackColor = true;
+            this.GULDDRENG.Click += new System.EventHandler(this.GULDDRENG_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(645, 263);
+            this.ClientSize = new System.Drawing.Size(741, 356);
+            this.Controls.Add(this.GULDDRENG);
+            this.Controls.Add(this.UAK);
+            this.Controls.Add(this.NextSong);
+            this.Controls.Add(this.PrevSong);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.NewGeneratedCode2);
+            this.Controls.Add(this.SlukMusik);
             this.Controls.Add(this.STOPKNAPPEN);
             this.Controls.Add(this.CurrentStatus);
             this.Controls.Add(this.statusLabel);
@@ -198,11 +331,13 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
-            this.Text = "HUE APP";
+            this.Text = "KasperHUEmand";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,6 +359,17 @@
         private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.Label NewGeneratedCode;
         private System.Windows.Forms.Button STOPKNAPPEN;
+        private System.Windows.Forms.CheckBox SlukMusik;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button TestLys;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox NewGeneratedCode2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button NextSong;
+        private System.Windows.Forms.Button PrevSong;
+        private System.Windows.Forms.Button GULDDRENG;
+        private System.Windows.Forms.Button UAK;
     }
 }
 
