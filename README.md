@@ -45,14 +45,14 @@ Du kan i stedet for at trykke start også vælge at trykke "test lyst", alle din
 Hvis ikke det virker burde du nok gå til step 4 igen eller skrive en vred besked til mig.
 Efter lys test burde programmet genstarte sig selv, hvis ikke skal du lige selv gøre det.
 
-Hvis du trykker start og alt information er udfyldt korrekt, burde statusfeltet begynde at ændre sig. Så længe status feltet bliver opdateret virker appen og lyset vil blike når der er scoret.
+Hvis du trykker start og alt information er udfyldt korrekt, burde statusfeltet begynde at ændre sig. Så længe status feltet bliver opdateret virker appen og lyset vil blike når det valgte land har scoret mål.
 BEMÆRK AT LYS DER ER SLUKKEDE IKKE VIL TÆNDE AF SIG SELV HVIS DER BLIVER SCORET.
 
 6. PROFIT! Ha' et godt VM! Og fuck FIFA!
 
 MEST STILLEDE SPØGSMÅL:
 Jeg har mistet min kode, kan jeg stadig bruge programmet?
-  -JA! Bare register dig igen(step 4), du vil få en helt ny kode der virker ligså godt. Måske er der et maks antal gange det er muligt at registrer, jeg er personligt    oppe på 20 og alt virker fint!
+  -JA! Bare register dig igen(step 4), du vil få en helt ny kode der virker ligså godt. Måske er der et maks antal gange det er muligt at registrer, jeg er personligt oppe på 20 og alt virker fint!
 Jeg har tekniske problemer, har i en support linje?
   -JA DU KAN RAMME MIG PÅ DISCORD ELLER REDDIT: discord: WILF#9962 Reddit: Wilf420
 Miner du bitcoin på min computer nu?
