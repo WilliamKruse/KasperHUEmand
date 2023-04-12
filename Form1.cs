@@ -21,23 +21,21 @@ using System.Xml.Linq;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Linq.Expressions;
-
+using KasperHUEmand.Models;
+using KasperHUEmand.Services;
 namespace KasperHUEmand
 {
     public partial class Form1 : Form
     {
-        public SoccerService service { get; set; } = new SoccerService();
+        public LiveScoreService Service { get; set; } = new LiveScoreService();
         IBridgeLocator locator { get; set; }
-        IBridgeLocator locator1 { get; set; }
-        IBridgeLocator locator2 { get; set; }
         public string IP { get; set; } = ConfigurationManager.AppSettings.Get("lastipused");
         public string HueCode { get; set; } = ConfigurationManager.AppSettings.Get("huekey");
         public string GeneratedHueCode { get; set; } = "";
         public bool FormFirstTime { get; set; } = false;
         public string APIStatus { get; set; } = "API IKKE KALDT ENDNU";
 
-        public bool STOPKNAP { get; set; } = true;
+        public bool ProcessRunning { get; set; } = true;
 
         public int UpdateCounter { get; set; } = 0;
         public System.Windows.Forms.Timer MyTimer { get; set; } = new System.Windows.Forms.Timer();
@@ -45,8 +43,8 @@ namespace KasperHUEmand
 
         public bool StopPressedOnce { get; set; } = false;
 
-        public SoundPlayer NightCoreBot { get; set; }
-        public readonly Land[] Lande = new Land[] { new Land("Danmark", "Denmark",0), new Land("Argentina", "Argentina",1), new Land("Australien", "Australia", 2), new Land("Belgien", "Belgium", 3), new Land("Brasillien", "Brazil", 4), new Land("Cameroon", "Cameroon", 5), new Land("Canada", "Canada", 6), new Land("Costa Rica", "Costa Rica", 7), new Land("Kroatien", "Croatia", 8), new Land("Ecuador", "Ecuador", 9), new Land("England", "England", 10), new Land("Frankrig", "France", 11), new Land("Ghana", "Ghana", 12), new Land("Holland", "Netherlands", 13), new Land("Iran", "Iran", 14), new Land("Japan", "Japan", 15), new Land("Mexico", "Mexico", 16), new Land("Morocco", "Morocco", 17), new Land("Polen", "Poland", 18), new Land("Portugal", "Portugal", 19), new Land("Qatar", "Qatar", 20), new Land("Saudi Arabien", "Saudi Arabia", 21), new Land("Senegal", "Senegal", 22), new Land("Serbien", "Serbia", 23), new Land("Syd Korea", "South Korea", 24), new Land("Spanien", "Spain", 25), new Land("Schweiz", "Switzerland", 26), new Land("Tunesien", "Tunesia", 27), new Land("Tyskland", "Germany", 28), new Land("Uruguay", "Uruguay", 29), new Land("USA", "USA", 30), new Land("Wales", "Wales", 31) };
+        public SoundPlayer MusicBot { get; set; }
+        public readonly Country[] QualifiedCountries = new Country[] { new Country("Danmark", "Denmark",0), new Country("Argentina", "Argentina",1), new Country("Australien", "Australia", 2), new Country("Belgien", "Belgium", 3), new Country("Brasillien", "Brazil", 4), new Country("Cameroon", "Cameroon", 5), new Country("Canada", "Canada", 6), new Country("Costa Rica", "Costa Rica", 7), new Country("Kroatien", "Croatia", 8), new Country("Ecuador", "Ecuador", 9), new Country("England", "England", 10), new Country("Frankrig", "France", 11), new Country("Ghana", "Ghana", 12), new Country("Holland", "Netherlands", 13), new Country("Iran", "Iran", 14), new Country("Japan", "Japan", 15), new Country("Mexico", "Mexico", 16), new Country("Morocco", "Morocco", 17), new Country("Polen", "Poland", 18), new Country("Portugal", "Portugal", 19), new Country("Qatar", "Qatar", 20), new Country("Saudi Arabien", "Saudi Arabia", 21), new Country("Senegal", "Senegal", 22), new Country("Serbien", "Serbia", 23), new Country("Syd Korea", "South Korea", 24), new Country("Spanien", "Spain", 25), new Country("Schweiz", "Switzerland", 26), new Country("Tunesien", "Tunesia", 27), new Country("Tyskland", "Germany", 28), new Country("Uruguay", "Uruguay", 29), new Country("USA", "USA", 30), new Country("Wales", "Wales", 31) };
         public string ChosenCountry { get; set; } = "Denmark";
         public int CountDownConnection { get; set; } = 20;
         public Form1()
@@ -58,16 +56,16 @@ namespace KasperHUEmand
         private void Form1_Load(object sender, EventArgs e)
         {
             IPInput.Text = IP;
-            HueKodeInput.Text = HueCode;
-            comboBox1.SelectedText = Lande[0].ToString();
-            comboBox1.SelectedItem = Lande[0].Value;
-            foreach (var item in Lande)
+            HueHashInput.Text = HueCode;
+            ChooseCountry.SelectedText = QualifiedCountries[0].ToString();
+            ChooseCountry.SelectedItem = QualifiedCountries[0].Value;
+            foreach (var item in QualifiedCountries)
             {
-                comboBox1.Items.Add(item);
+                ChooseCountry.Items.Add(item);
             }
            
-            NightCoreBot = new SoundPlayer(Properties.Resources.Gulddreng);
-            NightCoreBot.PlayLooping();
+            MusicBot = new SoundPlayer(Properties.Resources.Gulddreng);
+            MusicBot.PlayLooping();
         }
 
         private async Task<bool> TestLights()
@@ -100,7 +98,7 @@ namespace KasperHUEmand
         {
             Timer2();
         }
-        private async void MainFunc(string teamname)
+        private async void ContinousScoreCheck(string teamname)
         {
                 ILocalHueClient client = new LocalHueClient(IP);
                 client.Initialize(HueCode);
@@ -108,10 +106,10 @@ namespace KasperHUEmand
             var lysrød = new LightCommand();
             var lyshvid = new LightCommand();
 
-            while (STOPKNAP)
+            while (ProcessRunning)
             {
                 string goalchecker = "false";
-                goalchecker = await service.GetTheData(teamname);
+                goalchecker = await Service.CheckIfGoalWasScored(teamname);
                 if (goalchecker == "false")
                 {
                     APIStatus = "true";
@@ -159,11 +157,11 @@ namespace KasperHUEmand
             }
             else
             {
-                button1.Enabled = false;
-                MainFunc(ChosenCountry);
-                //Task.Run(() => MainFunc(ChosenCountry));
+                StartButton.Enabled = false;
+                ContinousScoreCheck(ChosenCountry);
+                //Task.Run(() => ContinousScoreCheck(ChosenCountry));
                 Timer();
-                STOPKNAPPEN.Enabled = true;
+                StopButton.Enabled = true;
                 UpdateConfig("lastipused", IP);
                 UpdateConfig("huekey", HueCode);
             }
@@ -199,18 +197,16 @@ namespace KasperHUEmand
             {
                 NewGeneratedCode.Text = "Connecting....";
                 MyTimer2.Stop();
-                locator1 = new HttpBridgeLocator();
-                //var bridges1 = await locator1.LocateBridgesAsync(TimeSpan.FromSeconds(5));
-                //bridges1 = await HueBridgeDiscovery.CompleteDiscoveryAsync(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(30));
+                locator = new HttpBridgeLocator();
                 ILocalHueClient client1 = new LocalHueClient(IP);
                 string salt = DateTime.UtcNow.ToShortTimeString().Replace(" ","");
                 GeneratedHueCode = await client1.RegisterAsync("HUEmand"+ salt, "MinComputer");
                 NewGeneratedCode.Text = "Her er din kode: (gem den et sted på din computer)(genstart derefter appen)";
-                NewGeneratedCode2.Text = GeneratedHueCode;
+                GeneratedHashCode.Text = GeneratedHueCode;
                 IPInput.Enabled = false;
                 checkBox1.Enabled = false;
-                button1.Enabled = false;
-                TestLys.Enabled = false;
+                StartButton.Enabled = false;
+                TestLightButton.Enabled = false;
                 UpdateConfig("HueKey", GeneratedHueCode);
                 CountDownConnection = 20;
                 
@@ -227,13 +223,13 @@ namespace KasperHUEmand
             {
                 case CheckState.Checked:
                     {
-                        HueKodeInput.Enabled = false;
+                        HueHashInput.Enabled = false;
                         FormFirstTime = true;
                         break;
                     }
                 case CheckState.Unchecked:
                     {
-                        HueKodeInput.Enabled = true;
+                        HueHashInput.Enabled = true;
                         FormFirstTime = false;
                         break;
                     }
@@ -250,21 +246,17 @@ namespace KasperHUEmand
 
         private void HueKodeInput_TextChanged(object sender, EventArgs e)
         {
-            HueCode = HueKodeInput.Text;
+            HueCode = HueHashInput.Text;
         }
 
-        private void CurrentStatus_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void STOPKNAPPEN_Click(object sender, EventArgs e)
         {
-            STOPKNAP = false;
+            ProcessRunning = false;
             MyTimer.Stop();
             CurrentStatus.Text = "Applikationen blev stoppet";
-            STOPKNAPPEN.Enabled = false;
-            button1.Enabled = true;
+            StopButton.Enabled = false;
+            StartButton.Enabled = true;
             UpdateCounter = 0;
             Application.Restart();
             Environment.Exit(0);
@@ -280,16 +272,16 @@ namespace KasperHUEmand
 
         private void SlukMusik_CheckedChanged(object sender, EventArgs e)
         {
-            switch (SlukMusik.CheckState)
+            switch (ToogleMusic.CheckState)
             {
                 case CheckState.Checked:
                     {
-                        NightCoreBot.Stop();
+                        MusicBot.Stop();
                         break;
                     }
                 case CheckState.Unchecked:
                     {
-                        NightCoreBot.PlayLooping();
+                        MusicBot.PlayLooping();
                         break;
                     }
             }
@@ -298,7 +290,7 @@ namespace KasperHUEmand
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            ChosenCountry = Lande[comboBox1.SelectedIndex].Value;
+            ChosenCountry = QualifiedCountries[ChooseCountry.SelectedIndex].Value;
         }
 
         private async void TestLys_Click(object sender, EventArgs e)
@@ -317,114 +309,35 @@ namespace KasperHUEmand
 
         private void button2_Click(object sender, EventArgs e)
         {
-            NightCoreBot.Stop();
-            SlukMusik.Checked = false;
-            NightCoreBot = new SoundPlayer(Properties.Resources.Burhan);
-            NightCoreBot.PlayLooping();
+            MusicBot.Stop();
+            ToogleMusic.Checked = false;
+            MusicBot = new SoundPlayer(Properties.Resources.Burhan);
+            MusicBot.PlayLooping();
         }
 
-        private void NextSong_Click(object sender, EventArgs e)
+        private void NATHOLDET_Click(object sender, EventArgs e)
         {
-            NightCoreBot.Stop();
-            SlukMusik.Checked = false;
-            NightCoreBot = new SoundPlayer(Properties.Resources.Natholdet);
-            NightCoreBot.PlayLooping();
+            MusicBot.Stop();
+            ToogleMusic.Checked = false;
+            MusicBot = new SoundPlayer(Properties.Resources.Natholdet);
+            MusicBot.PlayLooping();
         }
 
         private void GULDDRENG_Click(object sender, EventArgs e)
         {
-            NightCoreBot.Stop();
-            SlukMusik.Checked = false;
-            NightCoreBot = new SoundPlayer(Properties.Resources.Gulddreng);
-            NightCoreBot.PlayLooping();
+            MusicBot.Stop();
+            ToogleMusic.Checked = false;
+            MusicBot = new SoundPlayer(Properties.Resources.Gulddreng);
+            MusicBot.PlayLooping();
         }
 
         private void UAK_Click(object sender, EventArgs e)
         {
-            NightCoreBot.Stop();
-            SlukMusik.Checked = false;
-            NightCoreBot = new SoundPlayer(Properties.Resources.UAK);
-            NightCoreBot.PlayLooping();
+            MusicBot.Stop();
+            ToogleMusic.Checked = false;
+            MusicBot = new SoundPlayer(Properties.Resources.UAK);
+            MusicBot.PlayLooping();
         }
     }
-    public class Land
-    {
-        public string DisplayName { get; set; }
-        public string Value { get; set; }
-        public int Index { get; set; }
-        public Land(string displayname, string value, int index)
-        {
-            this.DisplayName = displayname;
-            this.Value = value;
-            this.Index = index;
-        }
-        public override string ToString()
-        {
-            return this.DisplayName;
-        }
-    }
-
-    public class SoccerService
-    {
-        public int Goals { get; set; } = 0;
-        public bool firsttime { get; set; } = true;
-        public SoccerService()
-        {
-            this.Goals = 0;
-            this.firsttime = true;
-        }
-
-
-        public async Task<string> GetTheData(string teamname)
-        {
-            string status = "Kampen er ikke igang endnu";
-            HttpClient cli = new HttpClient();
-            const string url = "https://api.sofascore.com/api/v1/sport/football/events/live";
-            var response = await cli.GetAsync(url);
-            Console.WriteLine(response.StatusCode);
-            var jsonString = await response.Content.ReadAsStringAsync();
-            dynamic dyn = JsonConvert.DeserializeObject(jsonString);
-            foreach (var obj in dyn.events)
-            {
-                if (obj.homeTeam.name == teamname)
-                {
-                    status = "hold fundet, kamp igang";
-                    
-                    if (obj.homeScore.current > Goals)
-                    {
-                        Console.WriteLine("Tidligere mål: " + Goals);
-                        Console.WriteLine("Mål fra API: " + obj.homeScore.current);
-                        Goals = obj.homeScore.current;
-                        if (firsttime)
-                        {
-                            firsttime = false;
-                            return "false";
-                        }
-                        Console.WriteLine("Danmark har scoret!!!");
-                        return "true";
-                    }
-                }
-                if (obj.awayTeam.name == teamname)
-                {
-                    status = "hold fundet, kamp igang";
-                    if (obj.awayScore.current > Goals)
-                    {
-                        Console.WriteLine("Tidligere mål: " + Goals);
-                        Console.WriteLine("Mål fra API: " + obj.awayScore.current);
-                        Goals = obj.awayScore.current;
-                        if (firsttime)
-                        {
-                            firsttime = false;
-                            return "false";
-                        }
-                        Console.WriteLine("Danmark har scoret!!!");
-                        return "true";
-                    }
-                }
-            }
-
-            return status;
-
-        }
-    }
+    
 }
